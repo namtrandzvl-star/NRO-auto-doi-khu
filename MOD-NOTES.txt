@@ -1,0 +1,56 @@
+NRO237 mod - 237 mod.jar
+===========================
+Goc: 237 new.jar (NRO237_v5, MIDlet-Version 2.3.7, zFox) trong repo namtrandzvl-star/NRO-auto-doi-khu
+Ngay mod: 2026-11-05
+
+1. Ep tat ca server ve 1 server
+--------------------------------
+- Danh sach server goc (14 muc: Vu tru 1-11, Vo dai lien vu tru, Universe 1, Naga)
+  da duoc thay bang 1 muc duy nhat:
+    NRO237:222.255.182.233:14445:0
+- Cac muc rieng Naga / Universe 1 cung duoc doi ve:
+    Naga:222.255.182.233:14445:2,2,0
+    Universe 1:222.255.182.233:14445:1,1,0
+- IP mac dinh trong main.GameMidlet doi tu 112.213.94.23 thanh 222.255.182.233 (port giu nguyen 14445)
+- Kiem tra ngay 2026-11-05: TCP toi 222.255.182.233:14445 ket noi duoc.
+- Luu y: day chi doi phia client. Server o IP/port tren phai dang chay va chap nhan
+  phien ban 237 thi moi dang nhap duoc.
+
+2. Tu danh va chuyen khu khi het quai
+--------------------------------------
+- Ban mod goc da co: tu danh quai gan nhat, va tu chuyen khu khi phat hien boss.
+- Them moi, trong lop auto-train (lop chua logic doi khu theo boss):
+  + Them bien dem rieng: autoChangeZoneEmptyTicks
+  + Moi lan kiem tra doi khu:
+    - Neu dang trong qua trinh doi khu thi khong kich hoat lai.
+    - Neu phat hien boss: doi khu nhu cu, hien "Phat hien boss! Chuan bi doi khu..."
+    - Neu khong tim thay quai hop le de danh (ham tim quai gan nhat tra ve null):
+      dem tang len 1. Neu quai xuat hien lai thi dem reset ve 0.
+      Neu het quai lien tuc 30 lan kiem tra (de cho quai co thoi gian hoi sinh),
+      thi kich hoat doi khu giong nhu khi gap boss, hien
+      "Het quai! Chuan bi doi khu..."
+    - Sau do may doi khu theo danh sach khu da luu san, xoay vong khu tiep theo.
+      Neu khong co khu nao phu hop thi hien "Khong tim thay khu phu hop!" va dung lai.
+  + Khong thay doi cach danh, cach chon quai, hay toc do danh.
+
+Cach test (khuyen nghi)
+----------------------
+1. Sao luu ban goc "237 new.jar" truoc khi chay ban mod.
+2. Chay "237 mod.jar" tren gia lap (vd: AngelChipEmulator.exe co san trong repo).
+3. O man hinh chon server chi con 1 server, IP 222.255.182.233:14445.
+4. Dang nhap bang nick test, bat auto-train, vao map co quai.
+   - Danh het quai trong khu, doi khoang vai giay: phai hien "Het quai! Chuan bi doi khu..."
+     roi tu chuyen sang khu tiep theo trong danh sach khu da luu.
+   - Neu o map khong co khu nao duoc luu, may se bao "Khong tim thay khu phu hop!" - day la
+     hanh vi cu, khong phai loi mod moi. Hay luu khu truoc khi bat auto.
+5. Neu may doi khu lien tuc o map khong co quai (vd: lang / thanh pho), tat auto-train
+   o map do, hoac xoa bot khu da luu.
+
+Gioi han da biet
+---------------
+- Chua test dang nhap that bang nick test trong phien nay. Chi kiem tra:
+  + class file van doc duoc bang javap/CFR sau khi patch,
+  + chuoi server trong jar moi deu chi ve 222.255.182.233:14445,
+  + logic doi khu moi hien dung trong ban dich nguoc.
+- Server phai tuong thich voi client 237, neu khong se bao loi dang nhap / ngat ket noi
+  o phia server, khong phai loi cua file jar.
