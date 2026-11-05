@@ -1,13 +1,17 @@
-NRO237 mod - 237 mod.jar
+NRO237 mod - 237 mod.jar (v2)
 ===========================
 Goc: 237 new.jar (NRO237_v5, MIDlet-Version 2.3.7, zFox) trong repo namtrandzvl-star/NRO-auto-doi-khu
-Ngay mod: 2026-11-05
+Ngay mod: 2026-11-05 (v2 sua loi crash + doi khu vao Tan Sat)
 
 1. Ep tat ca server ve 1 server
 --------------------------------
 - Danh sach server goc (14 muc: Vu tru 1-11, Vo dai lien vu tru, Universe 1, Naga)
   da duoc thay bang 1 muc duy nhat:
-    NRO237:222.255.182.233:14445:0
+    NRO237:222.255.182.233:14445:0,0,0
+  (giu ",0,0" o cuoi: code man hinh cho tach chuoi server bang dau "," va doc
+  phan tu [do dai - 2]; neu chi co 1 muc khong dau phay se crash
+  ArrayIndexOutOfBoundsException: Index -1 - loi nay da gap o v1 khi test
+  tren gia lap ngay 2026-11-05, v2 da sua.)
 - Cac muc rieng Naga / Universe 1 cung duoc doi ve:
     Naga:222.255.182.233:14445:2,2,0
     Universe 1:222.255.182.233:14445:1,1,0
@@ -16,41 +20,142 @@ Ngay mod: 2026-11-05
 - Luu y: day chi doi phia client. Server o IP/port tren phai dang chay va chap nhan
   phien ban 237 thi moi dang nhap duoc.
 
-2. Tu danh va chuyen khu khi het quai
---------------------------------------
+2. Tu danh va chuyen khu khi het quai - nam trong chuc nang Tan Sat, co bat/tat
+--------------------------------------------------------------------------------
 - Ban mod goc da co: tu danh quai gan nhat, va tu chuyen khu khi phat hien boss.
 - Them moi, trong lop auto-train (lop chua logic doi khu theo boss):
   + Them bien dem rieng: autoChangeZoneEmptyTicks
+  + Them co bat/tat: autoChangeZoneEnabled (mac dinh BAT)
   + Moi lan kiem tra doi khu:
     - Neu dang trong qua trinh doi khu thi khong kich hoat lai.
     - Neu phat hien boss: doi khu nhu cu, hien "Phat hien boss! Chuan bi doi khu..."
-    - Neu khong tim thay quai hop le de danh (ham tim quai gan nhat tra ve null):
+      (khong phu thuoc vao co bat/tat o tren).
+    - Neu co bat/tat dang TAT: dem het quai reset ve 0, khong doi khu.
+    - Neu co bat/tat dang BAT va khong tim thay quai hop le de danh
+      (ham tim quai gan nhat tra ve null):
       dem tang len 1. Neu quai xuat hien lai thi dem reset ve 0.
-      Neu het quai lien tuc 30 lan kiem tra (de cho quai co thoi gian hoi sinh),
-      thi kich hoat doi khu giong nhu khi gap boss, hien
-      "Het quai! Chuan bi doi khu..."
+      Neu het quai lien tuc 2 lan kiem tra thi kich hoat doi khu
+      giong nhu khi gap boss, hien "Het quai! Chuan bi doi khu..."
     - Sau do may doi khu theo danh sach khu da luu san, xoay vong khu tiep theo.
       Neu khong co khu nao phu hop thi hien "Khong tim thay khu phu hop!" va dung lai.
   + Khong thay doi cach danh, cach chon quai, hay toc do danh.
+- Bat/tat trong game: mo menu Auto Train (menu Tan Sat) -> muc moi
+    "Doi Khu Khi Het Quai: Bat/Tat"
+  Cham vao muc do de doi trang thai; may hien "Doi Khu Khi Het Quai: Bat" hoac
+  "...: Tat" va menu cap nhat ngay. Co nay chi co tac dung trong phien choi
+  (tat game mo lai se ve mac dinh Bat).
 
 Cach test (khuyen nghi)
 ----------------------
 1. Sao luu ban goc "237 new.jar" truoc khi chay ban mod.
 2. Chay "237 mod.jar" tren gia lap (vd: AngelChipEmulator.exe co san trong repo).
 3. O man hinh chon server chi con 1 server, IP 222.255.182.233:14445.
-4. Dang nhap bang nick test, bat auto-train, vao map co quai.
-   - Danh het quai trong khu, doi khoang vai giay: phai hien "Het quai! Chuan bi doi khu..."
+4. Dang nhap bang nick test, bat auto-train / Tan Sat, vao map co quai.
+   - Danh het quai trong khu: sau 2 lan kiem tra het quai (rat nhanh, vi moi lan
+     kiem tra cach nhau ~100ms) phai hien "Het quai! Chuan bi doi khu..."
      roi tu chuyen sang khu tiep theo trong danh sach khu da luu.
    - Neu o map khong co khu nao duoc luu, may se bao "Khong tim thay khu phu hop!" - day la
      hanh vi cu, khong phai loi mod moi. Hay luu khu truoc khi bat auto.
-5. Neu may doi khu lien tuc o map khong co quai (vd: lang / thanh pho), tat auto-train
-   o map do, hoac xoa bot khu da luu.
+   - Tat muc "Doi Khu Khi Het Quai" trong menu Auto Train: danh het quai thi
+     may khong doi khu nua.
+5. Neu may doi khu lien tuc o map khong co quai (vd: lang / thanh pho), tat
+   muc "Doi Khu Khi Het Quai" o map do, hoac xoa bot khu da luu.
+
+Lich su test
+------------
+- v1 (2026-11-05, nick vang014, MicroEmulator/AngelChipEmulator.exe):
+  FAIL - crash ngay khi khoi dong, ArrayIndexOutOfBoundsException: Index -1,
+  dung o logo ngoc rong, chua toi man hinh dang nhap. Ban goc chay binh thuong
+  tren cung gia lap. Nguyen nhan: chuoi server 1 muc khong co dau phay.
+  Da sua o v2 (them ",0,0" vao cuoi chuoi server).
+- v2 (2026-11-05, nick vang014, MicroEmulator, RMS sach):
+  PASS phan loi: khong crash, danh sach server chi con 1 muc NRO237,
+  dang nhap vang014 thanh cong, vao duoc trong game (nhan vat qwerqge,
+  map [11] Thung lung Maima [K8], di chuyen duoc). Log co 24 x EOFException
+  va 2 x ArrayIndexOutOfBoundsException: Index 1 khong gay chet game
+  (co ve do server rieng tra sai dinh dang "info").
+  CHUA XAC MINH DUOC TRONG GAME: nut "Doi Khu Khi Het Quai" trong menu
+  Tan Sat (menu cha "Menu Pro" mo bang lenh Command, chua tim ra phim
+  mo trong gia lap) va viec doi khu khi het quai. Chi xac minh bang code
+  (javap/CFR): muc 13 ton tai, TABLESWITCH 1..13, case 13 dao co.
+- v3 (2026-11-05): them NUT MO MENU PRO. Vi khong mo duoc Menu Pro
+  trong gia lap, ban v3 gan them lenh "Menu Pro" (Command, loai SCREEN)
+  vao man hinh game chinh: hien nhu phim mem/Options, bam vao se mo
+  thang menu Menu Pro. Duong di trong game: nut "Menu Pro" -> muc 6
+  (Auto Train) -> muc "Doi Khu Khi Het Quai: Bat/Tat".
+  Test v3 (nick vang014): phan loi van pass, NHUNG nut Command KHONG
+  mo duoc trong gia lap vi game chay full-screen: MicroEmulator
+  chuyen phim mem ve keyPressed(-7) thay vi goi commandAction, nen
+  nut khong hien va F2 khong co tac dung. Tren dien thoai that cung
+  co the gap van de tuong tu vi Canvas full-screen.
+- v4 (2026-11-05): giu nut Command cua v3, them moc truc tiep vao
+  keyPressed(-7) (phim mem phai / F2 trong gia lap): bam phim mem
+  phai trong game se mo thang Menu Pro. File "237 mod.jar" hien tai
+  la v4; ban v3 duoc giu lai o "237 mod v3.jar" (ban v2 o
+  "237 mod v2.jar"). Dang test v4 bang gia lap voi nick vang014.
+- v4 test tiep (2026-11-05, nick vang014): nut "Doi Khu Khi Het Quai"
+  DA XAC MINH DUOC TRONG GAME (mac dinh Bat, bam doi thanh Tat roi lai
+  Bat). Duong mo: F1 roi F2 (F2 mo Menu Pro khi bang nhan vat dang mo)
+  -> "Quay lai" -> menu "Main Mod" -> muc 6 "Tan sat" -> menu Auto Train.
+  Nhung DOI KHU KHI HET QUAI KHONG QUAN SAT DUOC: 2 lan o map trong
+  Than dien [K0] khong thay "Het quai!..." hay doi khu.
+- v4 test nick vang015 (2026-11-05, nhan vat qhhrtwh, map [3] Rung nam
+  [K2]): Tan Sat DANH DUOC quai (sat thuong -499/-700, roi do Mochi...),
+  nut van Bat. Sau ~6 phut, quai hoi sinh nhanh nen dieu kien het quai
+  khong xay ra; khu van [K2]. Ket luan: doi khu sau 2 lan het quai
+  CHUA DUOC XAC MINH trong game sau 3 lan thu.
+- v5 (2026-11-06): TIM RA NGUYEN NHAN + SUA.
+  Nguyen nhan 1: ham kiem tra doi khu (chua nhanh het quai) chi duoc
+  goi tu task "soi boss" chay moi 1000 ms, ma task nay thoat ngay neu
+  tren map khong co boss -> bo dem het quai khong bao gio tang.
+  Sua: viet lai run() cua task soi boss (class IIlIllIlIIllIllIIlIIIl...,
+  them vao jar thanh class thay the thu 6):
+    if (dang doi khu) return;
+    if (co boss) { if ("Ne Sieu Quai" BAT) goi ham kiem tra; return; }
+    if ("Doi Khu Khi Het Quai" BAT) goi ham kiem tra;
+  Ham kiem tra giu nguyen: gap boss -> doi khu; het quai 2 lan lien
+  tuc (moi lan cach nhau 1 giay) -> doi khu, hien "Het quai!...".
+  Nguyen nhan 2: danh sach khu de doi chi duoc luu khi bat nut
+  "Luu khu hien tai" trong menu Main Mod (khong phai menu Tan Sat),
+  cac lan test truoc chua bat bao gio nen danh sach trong.
+  Test v5 PHAI BAT "Luu khu hien tai: Bat" trong menu Main Mod truoc
+  (Menu Pro -> "Quay lai" -> menu Main Mod), roi moi bat Tan Sat.
+  File "237 mod.jar" hien tai la v5 (md5 53c32ea0df66e91be9db0a92207c39d4,
+  2.082.321 byte, 756 entry); ban v4 duoc giu lai o "237 mod v4.jar".
+  Luu y sua: khoang cach giua 2 lan kiem tra het quai la 1 giay
+  (task 1000 ms), khong phai ~100 ms nhu ghi o muc 2 phia tren.
+- v5 test (2026-11-06, nick vang015, qhhrtwh): chuan bi dung du
+  ("Luu khu hien tai: Bat" lan dau tien duoc bat, toggle Bat, Tan Sat
+  Bat, map trong Than dien [45] [K0]) nhung trigger VAN KHONG CHAY
+  lan thu 4: ~10 phut o map trong, 20 anh quan sat, khong thay
+  "Het quai!...", khu van [K0] (X:710 Y:408). Khong co ca
+  "Khong tim thay khu phu hop!" nen trigger khong chay chu khong
+  phai do danh sach khu trong. Nghi ngo moi: ham tim quai gan nhat
+  co the tinh ca de tu (pet bay theo trong anh), nen khong bao gio
+  tra ve null. Phan loi van pass (khong crash).
+- v6 (2026-11-06): BO DIEU KIEN HET QUAI, thay bang HEN GIO.
+  Ham kiem tra doi khu trong AutoTrain viet lai:
+    neu dang doi khu thi thoi;
+    neu gap boss thi doi khu nhu cu ("Phat hien boss!...");
+    neu toggle TAT thi dem hen gio reset ve 0;
+    moi giay dem +1; du 15 giay thi reset dem, kich hoat doi khu,
+    hien "Het 15 giay! Chuan bi doi khu...".
+  Nhan vat se tu doi sang khu moi cu 15 giay khi toggle dang bat.
+  Toggle trong menu Auto Train doi ten thanh "Tu Doi Khu Moi 15 Giay"
+  (nhan cu "Doi Khu Khi Het Quai" bo). File "237 mod.jar" hien tai
+  la v6 (md5 5d12efa7fd26e902f1ce3e1f36b2b7a8, 2.082.348 byte,
+  756 entry); ban v5 giu lai o "237 mod v5.jar". Task soi boss cua
+  v5 (goi ham kiem tra khi toggle bat) giu nguyen.
+  Test v6: bat "Luu khu hien tai", bat toggle, bat Tan Sat, vao map
+  bat ky, khu phai tu doi sau moi ~15 giay.
+- CANH BAO RMS: gia lap dung chung RMS cho ca ban goc va ban mod. Neu may
+  da tung chay ban goc, server da luu (Vu tru 1 / 112.213.94.23) se duoc
+  doc lai va dung nguyen, bypass danh sach server da ep (da gap: IP loi
+  032.542.0834, bao "May chu tat hoac mat song"). Tren dien thoai that
+  can XOA DU LIEU game hoac chon lai server NRO237 thi mod moi dung
+  dung server 222.255.182.233:14445.
 
 Gioi han da biet
 ---------------
-- Chua test dang nhap that bang nick test trong phien nay. Chi kiem tra:
-  + class file van doc duoc bang javap/CFR sau khi patch,
-  + chuoi server trong jar moi deu chi ve 222.255.182.233:14445,
-  + logic doi khu moi hien dung trong ban dich nguoc.
 - Server phai tuong thich voi client 237, neu khong se bao loi dang nhap / ngat ket noi
   o phia server, khong phai loi cua file jar.
